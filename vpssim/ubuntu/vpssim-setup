@@ -17,7 +17,7 @@ df -h
 
 #
 echo "=========================================================================="
-echo "Thong Tin Server:  "
+echo "Server info:  "
 echo "--------------------------------------------------------------------------"
 echo "Server Type: $(virt-what | awk 'NR==1 {print $NF}')"
 echo "CPU Type: $cpuname"
@@ -26,9 +26,9 @@ echo "CPU Speed: $cpufreq MHz"
 echo "Memory: $svram MB"
 echo "Disk: $svhdd"
 echo "IP: $svip"
-echo "Nhap Phpmyadmin Port: $svport" 
+echo "Phpmyadmin Port: $svport" 
 echo "--------------------------------------------------------------------------"
-echo "Dien Thong Tin Cai Dat: "
+echo "Enter your info: "
 echo "=========================================================================="
 
 
