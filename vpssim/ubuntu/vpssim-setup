@@ -136,3 +136,9 @@ apt install -y python3-certbot-nginx
 
 #
 #apt-get install ed -y
+
+
+# phpmyadmin
+cd ~
+checkdownload_version_phpmyadmin=`cat /opt/echbay_vpssim/vpssim/00-all-phpmyadmin-version.txt`
+echo $checkdownload_version_phpmyadmin
