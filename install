@@ -1,0 +1,46 @@
+#!/bin/sh
+
+# Author : Dao Quoc Dai from Viet Nam - itvn9online@gmail.com
+
+# update system
+sudo apt-get update -y
+sudo apt-get upgrade -y
+
+# install firewall
+sudo apt-get install -y fail2ban ufw
+
+# SSH, HTTP and HTTPS
+ufw allow 22
+ufw allow 80
+ufw allow 443
+
+# FTP
+ufw allow 21 
+ufw allow 50000:50099/tcp 
+ufw allow out 20/tcp
+
+# And lastly we activate UFW
+ufw --force enable
+
+#
+sudo apt-get -y install wget nano
+
+#
+cd ~
+bash <( curl -k https://raw.githubusercontent.com/itvn9online/vpssim-ubuntu/main/vpssim/menu/git-clone )
+
+#
+cd /opt/echbay_vpssim
+chmod +x setup
+bash setup
+
+
+#Add some PPAs to stay current
+#apt-get install -y software-properties-common
+#apt-add-repository ppa:ondrej/apache2 -y
+#apt-add-repository ppa:ondrej/nginx-mainline -y
+#apt-add-repository ppa:ondrej/php -y
+
+#Set up MariaDB repositories
+apt-key adv --fetch-keys 'https://mariadb.org/mariadb_release_signing_key.asc'
+add-apt-repository 'deb [arch=amd64,arm64,ppc64el] http://mirror.netinch.com/pub/mariadb/repo/10.3/ubuntu focal main'

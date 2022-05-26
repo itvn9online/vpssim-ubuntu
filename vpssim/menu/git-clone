@@ -1,0 +1,24 @@
+#!/bin/sh
+
+cd ~
+rm -rf /opt/echbay_vpssim/*
+rm -rf /opt/echbay_vpssim
+
+echo "Install git..."
+sudo apt-get -y install git > /dev/null 2>&1
+
+# clone script form git
+git clone https://github.com/itvn9online/vpssim-ubuntu /opt/echbay_vpssim
+
+cd ~
+
+find /opt/echbay_vpssim/vpssim/menu -type f -exec chmod 755 {} \;
+/opt/echbay_vpssim/vpssim/menu/git-clone-done
+
+echo "Update ECHBAY-VPSSIM menu"
+mkdir -p /etc/vpssim/menu ; chmod 755 /etc/vpssim/menu
+rm -rf /etc/vpssim/menu/*
+yes | cp -rf /opt/echbay_vpssim/vpssim/menu/. /etc/vpssim/menu/
+
+echo "Chmod 755 Menu"
+/opt/echbay_vpssim/vpssim/menu/chmod-755-menu
