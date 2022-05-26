@@ -69,6 +69,7 @@ clear
 rm -rf /root/vpssim*
 
 #
+cd ~
 yes | cp -rf /opt/echbay_vpssim/vpssim/ubuntu/vpssim-setup ~/vpssim-setup ; chmod +x vpssim-setup ; clear ; bash vpssim-setup
 rm -rf /root/install* && rm -rf /root/vpssim* && clear
 
