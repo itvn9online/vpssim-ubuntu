@@ -6,64 +6,65 @@ if [ $(id -u) != "0" ]; then
 fi
 
 if [ -f /var/cpanel/cpanel.config ]; then
-echo "WHM/Cpanel has been install Server/VPS"
-echo "Please re-install Ubuntu x64 and try again"
-echo "Good bye !"
-exit
+	echo "WHM/Cpanel has been install Server/VPS"
+	echo "Please re-install Ubuntu x64 and try again"
+	echo "Good bye !"
+	exit
 fi
 
 if [ -f /etc/psa/.psa.shadow ]; then
-echo "Plesk has been install Server/VPS"
-echo "Please re-install Ubuntu x64 and try again"
-echo "Good bye !"
-exit
+	echo "Plesk has been install Server/VPS"
+	echo "Please re-install Ubuntu x64 and try again"
+	echo "Good bye !"
+	exit
 fi
 
 if [ -f /etc/init.d/directadmin ]; then
-echo "DirectAdmin has been install Server/VPS"
-echo "Please re-install Ubuntu x64 and try again"
-echo "Good bye !"
-exit
+	echo "DirectAdmin has been install Server/VPS"
+	echo "Please re-install Ubuntu x64 and try again"
+	echo "Good bye !"
+	exit
 fi
 
 if [ -f /etc/init.d/webmin ]; then
-echo "Webmin has been install Server/VPS"
-echo "Please re-install Ubuntu x64 and try again"
-echo "Good bye !"
-exit
+	echo "Webmin has been install Server/VPS"
+	echo "Please re-install Ubuntu x64 and try again"
+	echo "Good bye !"
+	exit
 fi
 
 if [ -f /home/vpssim.conf ]; then
-clear
-echo "========================================================================="
-echo "========================================================================="
-echo "ECHBAY-VPSSIM has been install Server/VPS"
-echo "Usng command vpssim for visit menu"
-echo "Good bye !"
-echo "========================================================================="
-echo "========================================================================="
-rm -rf install*
-exit
+	clear
+	echo "========================================================================="
+	echo "========================================================================="
+	echo "ECHBAY-VPSSIM has been install Server/VPS"
+	echo "Usng command vpssim for visit menu"
+	echo "Good bye !"
+	echo "========================================================================="
+	echo "========================================================================="
+	rm -rf install*
+	exit
 fi
 
 arch=`uname -m`
 if [ ! "$arch" = "x86_64" ]; then
-clear
-echo "========================================================================="
-echo "========================================================================="
-echo "ECHBAY-VPSSIM only install in Ubuntu x64 bit"
-echo "Please re-install Ubuntu x64 and try again"
-echo "Good bye !"
-echo "========================================================================="
-echo "========================================================================="
-rm -rf install*
-exit
+	clear
+	echo "========================================================================="
+	echo "========================================================================="
+	echo "ECHBAY-VPSSIM only install in Ubuntu x64 bit"
+	echo "Please re-install Ubuntu x64 and try again"
+	echo "Good bye !"
+	echo "========================================================================="
+	echo "========================================================================="
+	rm -rf install*
+	exit
 fi
 
 if [ -f /etc/yum.repos.d/epel.repo ]; then
-sudo sed -i "s/mirrorlist=https/mirrorlist=http/" /etc/yum.repos.d/epel.repo
+	sudo sed -i "s/mirrorlist=https/mirrorlist=http/" /etc/yum.repos.d/epel.repo
 fi
 
+#
 yes | cp -rf /opt/echbay_vpssim/vpssim/calc /bin/calc && chmod +x /bin/calc
 clear  
 rm -rf ~/vpssim*

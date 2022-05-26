@@ -3,6 +3,7 @@
 #
 cd ~
 
+
 #Add some PPAs to stay current
 #apt-get install -y software-properties-common
 #apt-add-repository ppa:ondrej/apache2 -y
@@ -129,6 +130,15 @@ DROP DATABASE IF EXISTS test;
 DELETE FROM mysql.db WHERE Db='test' OR Db='test\\_%';
 FLUSH PRIVILEGES;
 MYSQL_SCRIPT
+
+#
+echo > /home/vpssim.conf
+cat > "/home/vpssim.conf" <<END
+mariadbpass="$MYSQL_ROOT_PASSWORD"
+END
+cat >> "/home/vpssim.conf" <<END
+mariadbuser="root"
+END
 
 
 #Install Letsencrypt Certbot
