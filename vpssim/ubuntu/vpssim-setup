@@ -155,7 +155,7 @@ rm -rf phpMyAdmin-*
 randomblow=`date |md5sum |cut -c '1-32'`;
 sed -e "s|cfg\['blowfish_secret'\] = ''|cfg['blowfish_secret'] = '$randomblow'|" config.sample.inc.php > config.inc.php
 
-#
+# copy nginx vHost for phpmyadmin
 yes | cp -rf /opt/echbay_vpssim/vpssim/conf/vpssim.demo.conf /etc/nginx/sites-available/default
 
 
@@ -165,3 +165,7 @@ systemctl restart php7.4-fpm; systemctl restart nginx;
 
 #
 yes | cp -rf /opt/echbay_vpssim/vpssim/vpssim /bin/vpssim && chmod +x /bin/vpssim
+
+
+#
+yes | cp -rf /opt/echbay_vpssim/version /etc/vpssim/vpssim.version
