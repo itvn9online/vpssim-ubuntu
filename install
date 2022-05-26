@@ -27,20 +27,9 @@ sudo apt-get -y install wget nano
 
 #
 cd ~
-bash <( curl -k https://raw.githubusercontent.com/itvn9online/vpssim-ubuntu/main/vpssim/menu/git-clone )
+bash <( curl -k https://github.com/itvn9online/vpssim-ubuntu/raw/main/vpssim/menu/git-clone )
 
 #
 cd /opt/echbay_vpssim
 chmod +x setup
 bash setup
-
-
-#Add some PPAs to stay current
-#apt-get install -y software-properties-common
-#apt-add-repository ppa:ondrej/apache2 -y
-#apt-add-repository ppa:ondrej/nginx-mainline -y
-#apt-add-repository ppa:ondrej/php -y
-
-#Set up MariaDB repositories
-apt-key adv --fetch-keys 'https://mariadb.org/mariadb_release_signing_key.asc'
-add-apt-repository 'deb [arch=amd64,arm64,ppc64el] http://mirror.netinch.com/pub/mariadb/repo/10.3/ubuntu focal main'
