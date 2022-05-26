@@ -30,6 +30,7 @@ cd ~
 bash <( curl -k https://github.com/itvn9online/vpssim-ubuntu/raw/main/vpssim/menu/git-clone )
 
 #
+cd ~
 cd /opt/echbay_vpssim
 chmod +x setup
 bash setup

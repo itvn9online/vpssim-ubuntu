@@ -5,7 +5,7 @@ rm -rf /opt/echbay_vpssim/*
 rm -rf /opt/echbay_vpssim
 
 echo "Install git..."
-sudo apt-get -y install git > /dev/null 2>&1
+sudo apt-get -y install git
 
 # clone script form git
 git clone https://github.com/itvn9online/vpssim-ubuntu.git /opt/echbay_vpssim
