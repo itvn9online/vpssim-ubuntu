@@ -1,35 +1,35 @@
 #!/bin/sh
 
 if [ $(id -u) != "0" ]; then
-    echo "Co loi: Ban phai dang nhap bang user root!"
+    echo "ERROR: Please login with root user!"
     exit
 fi
 
 if [ -f /var/cpanel/cpanel.config ]; then
-echo "Server cua ban da cai san WHM/Cpanel, neu ban muon dung ECHBAY-VPSSIM"
-echo "Hay cai moi lai he dieu hanh, khuyen dung centos6 - 64bit"
-echo "Chao tam biet !"
+echo "WHM/Cpanel has been install Server/VPS"
+echo "Please re-install Ubuntu x64 and try again"
+echo "Good bye !"
 exit
 fi
 
 if [ -f /etc/psa/.psa.shadow ]; then
-echo "Server cua ban da cai san Plesk, neu ban muon dung ECHBAY-VPSSIM"
-echo "Hay cai moi lai he dieu hanh, khuyen dung centos6 - 64bit"
-echo "Chao tam biet !"
+echo "Plesk has been install Server/VPS"
+echo "Please re-install Ubuntu x64 and try again"
+echo "Good bye !"
 exit
 fi
 
 if [ -f /etc/init.d/directadmin ]; then
-echo "Server cua ban da cai san DirectAdmin, neu ban muon dung ECHBAY-VPSSIM"
-echo "Hay cai moi lai he dieu hanh, khuyen dung centos6 - 64bit"
-echo "Chao tam biet !"
+echo "DirectAdmin has been install Server/VPS"
+echo "Please re-install Ubuntu x64 and try again"
+echo "Good bye !"
 exit
 fi
 
 if [ -f /etc/init.d/webmin ]; then
-echo "Server cua ban da cai san webmin, neu ban muon dung ECHBAY-VPSSIM"
-echo "Hay cai moi lai he dieu hanh, khuyen dung centos6 - 64bit"
-echo "Chao tam biet !"
+echo "Webmin has been install Server/VPS"
+echo "Please re-install Ubuntu x64 and try again"
+echo "Good bye !"
 exit
 fi
 
@@ -37,9 +37,9 @@ if [ -f /home/vpssim.conf ]; then
 clear
 echo "========================================================================="
 echo "========================================================================="
-echo "Server/VPS cua ban da cai san ECHBAY-VPSSIM"
-echo "Hay su dung lenh ECHBAY-VPSSIM de truy cap ECHBAY-VPSSIM menu"
-echo "Chao tam biet !"
+echo "ECHBAY-VPSSIM has been install Server/VPS"
+echo "Usng command vpssim for visit menu"
+echo "Good bye !"
 echo "========================================================================="
 echo "========================================================================="
 rm -rf install*
@@ -51,9 +51,9 @@ if [ ! "$arch" = "x86_64" ]; then
 clear
 echo "========================================================================="
 echo "========================================================================="
-echo "Hien tai! ECHBAY-VPSSIM chi ho tro phien ban x64 bit"
-echo "Vui long cai dat phien ban he dieu hanh x86_64 roi thu lai"
-echo "Chao tam biet !"
+echo "ECHBAY-VPSSIM only install in Ubuntu x64 bit"
+echo "Please re-install Ubuntu x64 and try again"
+echo "Good bye !"
 echo "========================================================================="
 echo "========================================================================="
 rm -rf install*
@@ -72,4 +72,3 @@ rm -rf ~/vpssim*
 cd ~
 yes | cp -rf /opt/echbay_vpssim/vpssim/ubuntu/vpssim-setup ~/vpssim-setup ; chmod +x vpssim-setup ; clear ; bash vpssim-setup
 rm -rf ~/install* && rm -rf ~/vpssim* && clear
-
