@@ -119,8 +119,13 @@ else
 fi
 
 
-#
+# primary port
 ufw allow $svport
+
+# FTP
+ufw allow 21 
+ufw allow 50000:50099/tcp 
+ufw allow out 20/tcp
 
 
 #Add some PPAs to stay current
