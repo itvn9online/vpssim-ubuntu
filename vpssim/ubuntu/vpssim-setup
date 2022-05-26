@@ -140,5 +140,24 @@ apt install -y python3-certbot-nginx
 
 # phpmyadmin
 cd ~
-checkdownload_version_phpmyadmin=`cat /opt/echbay_vpssim/vpssim/00-all-phpmyadmin-version.txt`
-echo $checkdownload_version_phpmyadmin
+phpmyadmin_version=`cat /opt/echbay_vpssim/vpssim/00-all-phpmyadmin-version.txt | awk 'NR==2 {print $1}' | sed 's/|//' | sed 's/|//'`
+echo $phpmyadmin_version
+
+echo "Cai dat phpMyAdmin... "
+mkdir -p /var/www/html/private_html
+cd /var/www/html/private_html/
+
+#
+wget -q https://files.phpmyadmin.net/phpMyAdmin/${phpmyadmin_version}/phpMyAdmin-${phpmyadmin_version}-all-languages.zip
+unzip -q phpMyAdmin-*.zip > /dev/null 2>&1
+yes | cp -rf phpMyAdmin-*/* .
+rm -rf phpMyAdmin-*
+randomblow=`date |md5sum |cut -c '1-32'`;
+sed -e "s|cfg\['blowfish_secret'\] = ''|cfg['blowfish_secret'] = '$randomblow'|" config.sample.inc.php > config.inc.php
+
+#
+yes | cp -rf /opt/echbay_vpssim/vpssim/conf/vpssim.demo.conf /etc/nginx/sites-available/default
+
+
+#Restart PHP-FPM and Nginx
+systemctl restart php7.4-fpm; systemctl restart nginx;
