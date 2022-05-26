@@ -161,3 +161,7 @@ yes | cp -rf /opt/echbay_vpssim/vpssim/conf/vpssim.demo.conf /etc/nginx/sites-av
 
 #Restart PHP-FPM and Nginx
 systemctl restart php7.4-fpm; systemctl restart nginx;
+
+
+#
+yes | cp -rf /opt/echbay_vpssim/vpssim/vpssim /bin/vpssim && chmod +x /bin/vpssim
