@@ -4,5 +4,6 @@
 
 ### Copy and RUN for Install LEMP in Ubuntu 18++:
 ```
-bash <( curl -k https://raw.githubusercontent.com/itvn9online/vpssim-ubuntu/main/install )
+wget https://raw.githubusercontent.com/itvn9online/vpssim-ubuntu/main/install && chmod +x git-clone && bash git-clone
+
 ```

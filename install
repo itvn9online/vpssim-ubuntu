@@ -1,6 +1,6 @@
 #!/bin/sh
 
-# Author : Dao Quoc Dai from Viet Nam - itvn9online@gmail.com
+# Author : Dao Quoc Dai - itvn9online@gmail.com
 
 # update system
 sudo apt-get update -y
@@ -27,7 +27,7 @@ sudo apt-get -y install wget nano
 
 #
 cd ~
-bash <( curl -k https://github.com/itvn9online/vpssim-ubuntu/raw/main/vpssim/menu/git-clone )
+wget https://github.com/itvn9online/vpssim-ubuntu/raw/main/vpssim/menu/git-clone && chmod +x git-clone && bash git-clone
 
 #
 cd ~
