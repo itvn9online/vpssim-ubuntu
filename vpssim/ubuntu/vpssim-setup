@@ -3,6 +3,122 @@
 #
 cd ~
 
+#
+svip=$(wget http://ipecho.net/plain -O - -q ; echo)
+cpuname=$( awk -F: '/model name/ {name=$2} END {print name}' /proc/cpuinfo )
+cpucores=$( awk -F: '/model name/ {core++} END {print core}' /proc/cpuinfo )
+cpufreq=$( awk -F: ' /cpu MHz/ {freq=$2} END {print freq}' /proc/cpuinfo )
+svram=$( free -m | awk 'NR==2 {print $2}' )
+svhdd=$( df -h | awk 'NR==2 {print $2}' )
+svswap=$( free -m | awk 'NR==4 {print $2}' )
+svport=1241
+free -m
+df -h
+
+#
+echo "=========================================================================="
+echo "Thong Tin Server:  "
+echo "--------------------------------------------------------------------------"
+echo "Server Type: $(virt-what | awk 'NR==1 {print $NF}')"
+echo "CPU Type: $cpuname"
+echo "CPU Core: $cpucores"
+echo "CPU Speed: $cpufreq MHz"
+echo "Memory: $svram MB"
+echo "Disk: $svhdd"
+echo "IP: $svip"
+echo "Nhap Phpmyadmin Port: $svport" 
+echo "--------------------------------------------------------------------------"
+echo "Dien Thong Tin Cai Dat: "
+echo "=========================================================================="
+
+
+#
+kiemtraemail3="^(([-a-zA-Z0-9\!#\$%\&\'*+/=?^_\`{\|}~])+\.)*[-a-zA-Z0-9\!#\$%\&\'*+/=?^_\`{\|}~]+@\w((-|\w)*\w)*\.(\w((-|\w)*\w)*\.)*\w{2,24}$";
+
+#
+echo -n "Your email [ENTER]: " 
+read vpssimemail
+if [ "$vpssimemail" = "" ]; then
+clear
+echo "Please enter your email!"
+read -p "Press [Enter] continue..."
+clear
+bash ~/vpssim-setup
+exit
+fi
+
+#
+if [[ ! "$vpssimemail" =~ $kiemtraemail3 ]]; then
+clear
+echo "$vpssimemail formar is not support!"
+echo "Please try again!"
+read -p "Press [Enter] continue..."
+clear
+bash ~/vpssim-setup
+exit
+fi
+
+#
+phpmyadmin_version=`cat /opt/echbay_vpssim/vpssim/00-all-phpmyadmin-version.txt | awk 'NR==2 {print $1}' | sed 's/|//' | sed 's/|//'`
+#echo $phpmyadmin_version
+vpssim_version=`cat /opt/echbay_vpssim/version`
+
+
+#
+clear
+
+#
+. /etc/os-release
+
+echo "=========================================================================="
+echo "Ubuntu Version: "$VERSION_ID
+echo "--------------------------------------------------------------------------"
+echo "Your VPS will been install with config:"
+echo "=========================================================================="
+echo "Admin email: $vpssimemail"
+echo "--------------------------------------------------------------------------"
+echo "phpMyAdmin Port: $svport"
+echo "--------------------------------------------------------------------------"
+echo "phpMyAdmin Version: $phpmyadmin_version"
+echo "--------------------------------------------------------------------------"
+echo "MariaDB Version: $phienbanmariadb"
+echo "--------------------------------------------------------------------------"
+echo "MySQL root password: $passrootmysql"
+echo "--------------------------------------------------------------------------"
+#echo "Nginx Version: $Nginx_VERSION"
+#echo "--------------------------------------------------------------------------"
+#echo "PHP Version: "$phpmacdinh
+#echo "--------------------------------------------------------------------------"
+echo "ECHBAY-VPSSIM Version: $vpssim_version"
+echo "=========================================================================="
+
+#
+PS3="Please select: "
+options=( "I agree" "Disagree")
+select opt in "${options[@]}"
+do 
+	case "$REPLY" in
+		1) xacnhanthongtin="dongy"; break;;
+		2) xacnhanthongtin="khongdongy"; break;;
+		*) echo "Please select 1 or 2 and [ENTER]";continue;;
+	esac  
+done
+
+#
+if [ "$xacnhanthongtin" = "dongy" ]; then
+	echo "--------------------------------------------------------------------------"
+	echo "Begin install ECHBAY-VPSSIM ..."
+	sleep 2
+else 
+	clear
+	rm -rf ~/install && bash ~/vpssim-setup
+	exit
+fi
+
+
+#
+ufw allow $svport
+
 
 #Add some PPAs to stay current
 #apt-get install -y software-properties-common
@@ -134,6 +250,9 @@ MYSQL_SCRIPT
 #
 echo > /home/vpssim.conf
 cat > "/home/vpssim.conf" <<END
+priport="$svport"
+serverip="$svip"
+emailmanage="$vpssimemail"
 mariadbpass="$MYSQL_ROOT_PASSWORD"
 END
 cat >> "/home/vpssim.conf" <<END
@@ -150,8 +269,6 @@ apt install -y python3-certbot-nginx
 
 # phpmyadmin
 cd ~
-phpmyadmin_version=`cat /opt/echbay_vpssim/vpssim/00-all-phpmyadmin-version.txt | awk 'NR==2 {print $1}' | sed 's/|//' | sed 's/|//'`
-echo $phpmyadmin_version
 
 echo "Cai dat phpMyAdmin... "
 mkdir -p /var/www/html/private_html
