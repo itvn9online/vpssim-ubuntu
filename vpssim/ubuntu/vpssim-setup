@@ -304,3 +304,36 @@ yes | cp -rf /opt/echbay_vpssim/vpssim/vpssim /bin/vpssim && chmod +x /bin/vpssi
 
 #
 yes | cp -rf /opt/echbay_vpssim/version /etc/vpssim/vpssim.version
+
+
+#
+sudo apt install exim -y
+sudo systemctl enable exim.service
+sudo systemctl start exim.service
+
+#
+cat > "/tmp/finishedemail.sh" <<END
+#!/bin/bash 
+echo -e 'Subject: ECHBAY-VPSSIM - Server/ VPS install complete $svip!
+
+Hello!
+
++ Command call ECHBAY-VPSSIM: vpssim
++ phpMyAdmin: http://$svip:$svport
++ MySQL root phpMyadmin: 
+Username: root  
+Password: $MYSQL_ROOT_PASSWORD 
+  
+ECHBAY-VPSSIM by Dao Quoc Dai - https://echbay.com' | exim  $vpssimemail
+END
+
+#
+chmod +x /tmp/finishedemail.sh
+/tmp/finishedemail.sh
+rm -f /tmp/finishedemail.sh
+clear
+
+
+#
+rm -rf ~/install*
+rm -rf ~/vpssim*
