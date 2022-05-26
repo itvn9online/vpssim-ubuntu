@@ -66,10 +66,10 @@ fi
 
 yes | cp -rf /opt/echbay_vpssim/vpssim/calc /bin/calc && chmod +x /bin/calc
 clear  
-rm -rf /root/vpssim*
+rm -rf ~/vpssim*
 
 #
 cd ~
 yes | cp -rf /opt/echbay_vpssim/vpssim/ubuntu/vpssim-setup ~/vpssim-setup ; chmod +x vpssim-setup ; clear ; bash vpssim-setup
-rm -rf /root/install* && rm -rf /root/vpssim* && clear
+rm -rf ~/install* && rm -rf ~/vpssim* && clear
 
