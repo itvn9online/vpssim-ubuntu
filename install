@@ -2,6 +2,9 @@
 
 # Author : Dao Quoc Dai - itvn9online@gmail.com
 
+#
+cd ~
+
 # update system
 #sudo apt-get update -y
 #sudo apt-get upgrade -y
@@ -20,11 +23,11 @@ ufw --force enable
 #
 sudo apt-get -y install wget nano
 
-#
+# clone script form github
 cd ~
 wget https://github.com/itvn9online/vpssim-ubuntu/raw/main/vpssim/menu/git-clone && chmod +x git-clone && bash git-clone
 
-#
+# check and install LEMP
 cd ~
 cd /opt/echbay_vpssim
 chmod +x setup
