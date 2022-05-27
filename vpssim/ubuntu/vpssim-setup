@@ -279,14 +279,19 @@ apt install -y python3-certbot-nginx
 #apt-get install ed -y
 
 
+#
+echo "Install Control pannel... "
+mkdir -p /var/www/html/private_html
+
+
 # phpmyadmin
 cd ~
 
-echo "Cai dat phpMyAdmin... "
-mkdir -p /var/www/html/private_html/tmp
-chmod 0777 /var/www/html/private_html/tmp
-mkdir -p /var/www/html/private_html
-cd /var/www/html/private_html/
+echo "Install phpMyAdmin... "
+mkdir -p /var/www/html/phpmyadmin/tmp
+chmod 0777 /var/www/html/phpmyadmin/tmp
+mkdir -p /var/www/html/phpmyadmin
+cd /var/www/html/phpmyadmin/
 
 #
 wget -q https://files.phpmyadmin.net/phpMyAdmin/${phpmyadmin_version}/phpMyAdmin-${phpmyadmin_version}-all-languages.zip
