@@ -67,6 +67,11 @@ phpmyadmin_version=`cat /opt/echbay_vpssim/vpssim/00-all-phpmyadmin-version.txt 
 vpssim_version=`cat /opt/echbay_vpssim/version`
 
 
+
+# Secure your MariaDB installation
+passrootmysql=$(date +%s|sha256sum|base64|head -c 16) #openssl rand -hex >
+
+
 #
 clear
 
@@ -84,8 +89,8 @@ echo "phpMyAdmin Port: $svport"
 echo "--------------------------------------------------------------------------"
 echo "phpMyAdmin Version: $phpmyadmin_version"
 echo "--------------------------------------------------------------------------"
-echo "MariaDB Version: $phienbanmariadb"
-echo "--------------------------------------------------------------------------"
+#echo "MariaDB Version: $phienbanmariadb"
+#echo "--------------------------------------------------------------------------"
 echo "MySQL root password: $passrootmysql"
 echo "--------------------------------------------------------------------------"
 #echo "Nginx Version: $Nginx_VERSION"
@@ -119,6 +124,19 @@ else
 fi
 
 
+#
+echo > /home/vpssim.conf
+chmod 755 /home/vpssim.conf
+cat > "/home/vpssim.conf" <<END
+serverip="$svip"
+priport="$svport"
+emailmanage="$vpssimemail"
+mariadbuser="root"
+mariadbpass="$passrootmysql"
+phpmyadmin_version="$phpmyadmin_version"
+END
+
+
 # primary port
 ufw allow $svport
 
@@ -134,142 +152,22 @@ ufw allow out 20/tcp
 #apt-add-repository ppa:ondrej/nginx-mainline -y
 #apt-add-repository ppa:ondrej/php -y
 
-#Set up MariaDB repositories
-apt-key adv --fetch-keys 'https://mariadb.org/mariadb_release_signing_key.asc'
-add-apt-repository 'deb [arch=amd64,arm64,ppc64el] http://mirror.netinch.com/pub/mariadb/repo/10.3/ubuntu focal main'
-
 #Install base packages
 sudo apt-get -y update
+sudo apt-get upgrade -y
 sudo apt-get install -y build-essential curl nano wget lftp unzip bzip2 arj nomarch lzop htop openssl gcc git binutils libmcrypt4 libpcre3-dev make python3 python3-pip supervisor unattended-upgrades whois zsh imagemagick uuid-runtime net-tools
 
 #Set the timezone to UTC
 ln -sf /usr/share/zoneinfo/UTC /etc/localtime
 
 
-# install nginx
-sudo apt install nginx -y
-sudo systemctl enable nginx
-sudo systemctl start nginx
-
-sudo iptables -I INPUT -p tcp --dport 80 -j ACCEPT
-sudo ufw allow http
-
-sudo chown www-data:www-data /usr/share/nginx/html -R
-sudo chown www-data:www-data /var/www/ -R
-
-
-#Install PHP7.4 and common PHP packages
-echo "Install PHP 7.4"
-
-sudo apt install -y php7.4 php7.4-fpm php7.4-mysql php-common php7.4-cli php7.4-common php7.4-json php7.4-opcache php7.4-readline php7.4-mbstring php7.4-xml php7.4-gd php7.4-curl
-
-
-sudo systemctl enable php7.4-fpm
-sudo systemctl start php7.4-fpm
-
-#Update PHP CLI configuration
-sed -i "s/error_reporting = .*/error_reporting = E_ALL/" /etc/php/7.4/cli/php.ini
-sed -i "s/display_errors = .*/display_errors = On/" /etc/php/7.4/cli/php.ini
-sed -i "s/memory_limit = .*/memory_limit = 512M/" /etc/php/7.4/cli/php.ini
-sed -i "s/;date.timezone.*/date.timezone = UTC/" /etc/php/7.4/cli/php.ini
-
-#Configure sessions directory permissions
-chmod 733 /var/lib/php/sessions
-chmod +t /var/lib/php/sessions
-
-
-#Tweak PHP-FPM settings
-sed -i "s/error_reporting = .*/error_reporting = E_ALL \& ~E_NOTICE \& ~E_STRICT \& ~E_DEPRECATED/" /etc/php/7.4/fpm/php.ini
-sed -i "s/display_errors = .*/display_errors = On/" /etc/php/7.4/fpm/php.ini
-sed -i "s/memory_limit = .*/memory_limit = 512M/" /etc/php/7.4/fpm/php.ini
-sed -i "s/upload_max_filesize = .*/upload_max_filesize = 256M/" /etc/php/7.4/fpm/php.ini
-sed -i "s/post_max_size = .*/post_max_size = 256M/" /etc/php/7.4/fpm/php.ini
-sed -i "s/;date.timezone.*/date.timezone = UTC/" /etc/php/7.4/fpm/php.ini
-
-#Tune PHP-FPM pool settings
-sed -i "s/;listen\.mode =.*/listen.mode = 0666/" /etc/php/7.4/fpm/pool.d/www.conf
-sed -i "s/;request_terminate_timeout =.*/request_terminate_timeout = 60/" /etc/php/7.4/fpm/pool.d/www.conf
-sed -i "s/pm\.max_children =.*/pm.max_children = 70/" /etc/php/7.4/fpm/pool.d/www.conf
-sed -i "s/pm\.start_servers =.*/pm.start_servers = 20/" /etc/php/7.4/fpm/pool.d/www.conf
-sed -i "s/pm\.min_spare_servers =.*/pm.min_spare_servers = 20/" /etc/php/7.4/fpm/pool.d/www.conf
-sed -i "s/pm\.max_spare_servers =.*/pm.max_spare_servers = 35/" /etc/php/7.4/fpm/pool.d/www.conf
-sed -i "s/;pm\.max_requests =.*/pm.max_requests = 500/" /etc/php/7.4/fpm/pool.d/www.conf
-
-
-
-#Tweak Nginx settings
-
-yes | cp -rf /opt/echbay_vpssim/vpssim/conf/nginx.conf /etc/nginx/nginx.conf
-
-sed -i "s/worker_processes.*/worker_processes auto;/" /etc/nginx/nginx.conf
-sed -i "s/# multi_accept.*/multi_accept on;/" /etc/nginx/nginx.conf
-sed -i "s/# server_names_hash_bucket_size.*/server_names_hash_bucket_size 128;/" /etc/nginx/nginx.conf
-sed -i "s/# server_tokens off/server_tokens off/" /etc/nginx/nginx.conf
-
-# disable nginx log
-sed -i "s/access_log.*/access_log off;/" /etc/nginx/nginx.conf
-sed -i "s/error_log.*/error_log off;/" /etc/nginx/nginx.conf
-
-#Configure Gzip for Nginx
-cat > /etc/nginx/conf.d/gzip.conf << EOF
-gzip_comp_level 5;
-gzip_min_length 256;
-gzip_proxied any;
-gzip_vary on;
-gzip_types
-application/atom+xml
-application/javascript
-application/json
-application/rss+xml
-application/vnd.ms-fontobject
-application/x-web-app-manifest+json
-application/xhtml+xml
-application/xml
-font/otf
-font/ttf
-image/svg+xml
-image/x-icon
-text/css
-text/plain;
-EOF
-
-
-#Restart PHP-FPM and Nginx
-systemctl restart php7.4-fpm; systemctl restart nginx;
-
-
-#Install MariaDB (MySQL) and set a strong root password
-apt-get install -y mariadb-server;
-
-
-#Secure your MariaDB installation
-MYSQL_ROOT_PASSWORD=$(date +%s|sha256sum|base64|head -c 16) #openssl rand -hex >
-DATABASE_PASS=$MYSQL_ROOT_PASSWORD
-echo $MYSQL_ROOT_PASSWORD
-
-#
-mysqladmin -u root password "$DATABASE_PASS"
-# Make sure that NOBODY can access the server without a password
-mysql -u root -p"$DATABASE_PASS" -e "UPDATE mysql.user SET Password=PASSWORD('$DATABASE_PASS') WHERE User='root'"
-# Kill the anonymous users
-mysql -u root -p"$DATABASE_PASS" -e "DELETE FROM mysql.user WHERE User='root' AND Host NOT IN ('localhost', '127.0.0.1', '::1')"
-mysql -u root -p"$DATABASE_PASS" -e "DELETE FROM mysql.user WHERE User=''"
-# Kill off the demo database
-mysql -u root -p"$DATABASE_PASS" -e "DELETE FROM mysql.db WHERE Db='test' OR Db='test\_%'"
-# Make our changes take effect
-mysql -u root -p"$DATABASE_PASS" -e "FLUSH PRIVILEGES"
-
-#
-echo > /home/vpssim.conf
-cat > "/home/vpssim.conf" <<END
-priport="$svport"
-serverip="$svip"
-emailmanage="$vpssimemail"
-mariadbpass="$MYSQL_ROOT_PASSWORD"
-END
-cat >> "/home/vpssim.conf" <<END
-mariadbuser="root"
-END
+# install
+cd ~
+/etc/vpssim/menu/install/php-fpm
+/etc/vpssim/menu/install/nginx
+/etc/vpssim/menu/install/mariadb
+/etc/vpssim/menu/install/phpmyadmin
+/etc/vpssim/menu/install/ebpanel
 
 
 #Install Letsencrypt Certbot
@@ -279,28 +177,14 @@ apt install -y python3-certbot-nginx
 #apt-get install ed -y
 
 
-#
-echo "Install Control pannel... "
-mkdir -p /var/www/html/private_html
-rm -rf /var/www/html/private_html/*
-
-
-# phpmyadmin
-cd ~
-/etc/vpssim/menu/phpmyadmin-install
-
-
 # copy nginx vHost for phpmyadmin
 yes | cp -rf /opt/echbay_vpssim/vpssim/conf/vpssim.demo.conf /etc/nginx/sites-available/default
-
 
 #Restart PHP-FPM and Nginx
 systemctl restart php7.4-fpm; systemctl restart nginx;
 
-
 #
 yes | cp -rf /opt/echbay_vpssim/vpssim/vpssim /bin/vpssim && chmod +x /bin/vpssim
-
 
 #
 yes | cp -rf /opt/echbay_vpssim/version /etc/vpssim/vpssim.version
@@ -316,13 +200,13 @@ cat > "/tmp/finishedemail.sh" <<END
 #!/bin/bash 
 echo -e 'Subject: ECHBAY-VPSSIM - Server/ VPS install complete $svip!
 
-Hello!
+Hello baby,
 
-+ Command call ECHBAY-VPSSIM: vpssim
++ Call ECHBAY-VPSSIM menu: vpssim
 + phpMyAdmin: http://$svip:$svport
 + MySQL root phpMyadmin: 
 Username: root  
-Password: $MYSQL_ROOT_PASSWORD 
+Password: $passrootmysql 
   
 ECHBAY-VPSSIM by Dao Quoc Dai - https://echbay.com' | exim  $vpssimemail
 END

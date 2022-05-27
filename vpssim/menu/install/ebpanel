@@ -1,0 +1,12 @@
+#!/bin/bash
+. /home/vpssim.conf
+
+#
+echo "Install EchBay Control pannel... "
+sleep 2
+
+
+#
+cd ~
+mkdir -p /var/www/html/private_html
+rm -rf /var/www/html/private_html/*

@@ -3,8 +3,8 @@
 # Author : Dao Quoc Dai - itvn9online@gmail.com
 
 # update system
-sudo apt-get update -y
-sudo apt-get upgrade -y
+#sudo apt-get update -y
+#sudo apt-get upgrade -y
 
 # install firewall
 sudo apt-get install -y fail2ban ufw

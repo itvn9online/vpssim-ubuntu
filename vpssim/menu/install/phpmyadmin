@@ -1,12 +1,14 @@
 #!/bin/bash
+. /home/vpssim.conf
 
-# phpmyadmin
-echo "Install phpMyAdmin... "
+#
+echo "Install phpMyAdmin..."
+sleep 2
 
 #
 cd ~
 mkdir -p /var/www/html/phpmyadmin/tmp
-chmod 0777 /var/www/html/phpmyadmin/tmp
+chmod 777 /var/www/html/phpmyadmin/tmp
 mkdir -p /var/www/html/phpmyadmin
 rm -rf /var/www/html/phpmyadmin/*
 cd /var/www/html/phpmyadmin/
