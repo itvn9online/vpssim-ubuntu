@@ -1,0 +1,20 @@
+#!/bin/bash
+
+# phpmyadmin
+echo "Install phpMyAdmin... "
+
+#
+cd ~
+mkdir -p /var/www/html/phpmyadmin/tmp
+chmod 0777 /var/www/html/phpmyadmin/tmp
+mkdir -p /var/www/html/phpmyadmin
+rm -rf /var/www/html/phpmyadmin/*
+cd /var/www/html/phpmyadmin/
+
+#
+wget -q https://files.phpmyadmin.net/phpMyAdmin/${phpmyadmin_version}/phpMyAdmin-${phpmyadmin_version}-all-languages.zip
+unzip -q phpMyAdmin-*.zip > /dev/null 2>&1
+yes | cp -rf phpMyAdmin-*/* .
+rm -rf phpMyAdmin-*
+randomblow=`date |md5sum |cut -c '1-32'`;
+sed -e "s|cfg\['blowfish_secret'\] = ''|cfg['blowfish_secret'] = '$randomblow'|" config.sample.inc.php > config.inc.php
