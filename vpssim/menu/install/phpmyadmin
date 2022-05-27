@@ -7,10 +7,10 @@ sleep 2
 
 #
 cd ~
-mkdir -p /var/www/html/phpmyadmin/tmp
-chmod 777 /var/www/html/phpmyadmin/tmp
 mkdir -p /var/www/html/phpmyadmin
 rm -rf /var/www/html/phpmyadmin/*
+mkdir -p /var/www/html/phpmyadmin/tmp
+chmod 777 /var/www/html/phpmyadmin/tmp
 cd /var/www/html/phpmyadmin/
 
 #
