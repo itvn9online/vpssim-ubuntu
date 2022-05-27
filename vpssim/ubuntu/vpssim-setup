@@ -282,6 +282,7 @@ apt install -y python3-certbot-nginx
 #
 echo "Install Control pannel... "
 mkdir -p /var/www/html/private_html
+rm -rf /var/www/html/private_html/*
 
 
 # phpmyadmin
@@ -291,6 +292,7 @@ echo "Install phpMyAdmin... "
 mkdir -p /var/www/html/phpmyadmin/tmp
 chmod 0777 /var/www/html/phpmyadmin/tmp
 mkdir -p /var/www/html/phpmyadmin
+rm -rf /var/www/html/phpmyadmin/*
 cd /var/www/html/phpmyadmin/
 
 #
