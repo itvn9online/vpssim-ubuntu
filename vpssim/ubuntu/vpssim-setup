@@ -53,7 +53,7 @@ fi
 #
 if [[ ! "$vpssimemail" =~ $kiemtraemail3 ]]; then
 clear
-echo "$vpssimemail formar is not support!"
+echo "$vpssimemail - Email format is not support!"
 echo "Please try again!"
 read -p "Press [Enter] continue..."
 clear
